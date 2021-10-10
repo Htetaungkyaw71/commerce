@@ -1,0 +1,31 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2 >Active Listings</h2>
+
+    {% for i in listings %}
+   
+    <div class="card mb-3 mt-5">
+        <div class="row no-gutters" style="max-width: 500px;">
+          <div class="col-md-4">
+            <img src="{{i.image}}" class="img-fluid" width="150px">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title"><a href="{% url 'detail' i.id %}">{{i.title}}</a></h5>
+              <p class="card-text">{{i.description}}</p>
+              <p class="card-text"><b>${{i.price}}</b></p>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      {% empty %}
+      <div style="display: flex;justify-content: center;align-items: center;text-align: center;height: 250px;">
+    
+        No Listings
+      
+    </div>
+ 
+    {% endfor %}
+{% endblock %}

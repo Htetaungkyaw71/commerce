@@ -1,0 +1,35 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Watchlist</h2>
+   
+    {% for i in lists %}
+    {% for a in i.watchlist.all %}
+    <div class="card mb-3 mt-5">
+        <div class="row no-gutters" style="max-width: 500px;">
+          <div class="col-md-4">
+            <img src="{{a.image}}" class="img-fluid" width="150px">
+          </div>
+          <div class="col-md-8">
+            <div class="card-body">
+              <h5 class="card-title"><a href="{% url 'detail' a.id %}">{{a.title}}</a></h5>
+              <p class="card-text">{{a.description}}</p>
+              <p class="card-text"><b>${{a.price}}</b></p>
+            </div>
+          </div>
+        </div>
+      </div>
+   
+    
+      {% endfor %}
+      {% empty %}
+      <div style="display: flex;justify-content: center;align-items: center;text-align: center;height: 250px;">
+    
+          No watchlist yet
+        
+      </div>
+   
+      
+     
+      {% endfor %}
+{% endblock %}

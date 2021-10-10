@@ -1,0 +1,171 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    
+
+  
+  <div class="container-fluid">
+    <h2>{{post.title}}</h2>
+    <div class="row" >
+      <div class="col-lg-6">
+        <img src="{{post.image}}" class="img-fluid" width="200px" >
+      
+        <p >{{post.description}}</p>
+        <h3><b>${{post.price}}</b></h3>
+
+        <h1 class="mt-4">
+            Detail
+        </h1>
+        <ul>
+            <li>Listed by {{post.owner}}</li>
+            <li>category  {{post.category}}</li>
+        </ul>
+
+   
+        {% if ok %}
+      
+        <a href="{% url 'remove' post.id %}" class="btn btn-primary mb-3 mt-3">remove from watchlist</a>
+        {% else %}
+       
+        <a href="{% url 'add' post.id %}" class="btn btn-primary mb-3 mt-3">add to watchlist</a>
+        {% endif %}
+
+      </div> 
+   
+        <div class="col-lg-6">
+
+
+          <h1>
+            Bid
+          </h1>
+          {% if messages %}
+          <ul class="messages">
+              {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+              {% endfor %}
+          </ul>
+          
+          {% endif %}
+          
+          
+          
+          {% if post in close_posts %}
+          <ul>
+            <li>Final Bid price $ {{ current_bid_price }}</li>
+            {% if owner %}
+            <li>Your item has been closed</li>
+            {% else %}
+            <li>This item has been closed</li>
+            {% endif %}
+            {% if request.user == winner %}
+            <b>
+              Congralations you are the winner for this item
+            </b>
+            {% endif %}
+          </ul>
+          
+          {% else %}
+          
+          
+          <p>
+            <ul>
+              <li>Current price $ {{post.price}}</li>
+              {% if current_bid_price  %}
+          
+              <li>Highest Bid price $ {{ current_bid_price }}</li>
+              {% else %}
+              <li>no bid here currently</li>
+              {% endif %}
+            </ul>
+          </p>
+          
+          {% if owner %}
+          <a href="{% url 'close' post.id %}" class="btn btn-primary">Close Bidding</a>
+          {% else %}
+          <form action="{% url 'bid' post.id %}" method="post" class="form-inline ">
+            {% csrf_token %}
+            <input type="number" name="bid_price" class="form-control mx-sm-3 mb-3">
+            <input type="submit" value="Bid" class="btn btn-primary mb-3">
+          </form>
+          
+          {% endif %}
+          
+          
+          
+          {% endif %}
+  
+        </div>
+
+
+
+
+
+      </div>
+     
+ 
+      </div>   
+<!-- bid -->
+
+
+<hr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- bid -->
+
+<!-- comment -->
+
+  <h1 class="mt-5">
+    Write Comment
+  </h1>
+  <form action="{% url 'comment' post.id %}" method="post" class="form-inline mt-5">
+    {% csrf_token %}
+    <b class="mb-3"> {{request.user}}</b>
+    <input type="text" name="message" placeholder="comment" class="form-control mx-sm-3 mb-3">
+    <input type="submit" class="btn btn-primary mb-3">
+ 
+  
+  </form>
+
+  <h1 class="mt-5 mb-5">
+    View Comment
+  </h1>
+
+    {% for comment in comments  %}
+    <div class="row card p-3 mb-3 mt-3">
+     <p> 
+       <b>{{comment.user.username}} </b> &nbsp;
+        {{comment.message}}
+      </p>
+      {% if request.user == comment.user %}
+      <a href="{% url 'remove_comment' comment.id post.id %}"> remove</a>
+      {% endif %}
+    </div>
+ 
+    {% empty %}
+    <div class="row card p-3">
+      <p> 
+        No comment here
+       </p>
+     </div>
+    
+    {% endfor %}
+  
+
+<!-- comment -->
+       
+        
+       
+   
+   
+{% endblock %}
